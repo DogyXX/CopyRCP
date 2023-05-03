@@ -3,6 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>RoverControlApp</RootNamespace>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Onvif.Core" Version="2.2.2" />

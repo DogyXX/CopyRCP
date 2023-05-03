@@ -1,23 +1,11 @@
 {
   "profiles": {
-    "Godot Player": {
-      "commandName": "Executable",
-      "executablePath": "Godot_stable_mono_win64.exe",
-      "commandLineArgs": "--path . --verbose",
-      "workingDirectory": ".",
-      "nativeDebugging": true
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
     },
-    "Godot Console": {
-      "commandName": "Executable",
-      "executablePath": "Godot_stable_mono_win64_console.exe",
-      "commandLineArgs": "--path . --verbose",
-      "workingDirectory": ".",
-      "nativeDebugging": true
-    },
-    "Godot Editor": {
-      "commandName": "Executable",
-      "executablePath": "Godot_stable_mono_win64.exe",
-      "commandLineArgs": "--path . --editor",
+    "StartMain": {
+      "commandName": "Project",
       "workingDirectory": ".",
       "nativeDebugging": true
     }
