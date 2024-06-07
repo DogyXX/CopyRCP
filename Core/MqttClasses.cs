@@ -65,7 +65,8 @@ namespace RoverControlApp.Core
 			public float Axis3 { get; set; }
 			public float Axis4 { get; set; }
 			public float Axis5 { get; set; }
-			public float Gripper { get; set; }
+			public float Axis6 { get; set; }
+			public bool Gripper { get; set; }
 			public long Timestamp { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 			public override bool Equals(object? obj)
 			{
@@ -76,13 +77,14 @@ namespace RoverControlApp.Core
 				isEqual &= Mathf.IsEqualApprox(Axis3, manipObj.Axis3, 0.005f);
 				isEqual &= Mathf.IsEqualApprox(Axis4, manipObj.Axis4, 0.005f);
 				isEqual &= Mathf.IsEqualApprox(Axis5, manipObj.Axis5, 0.005f);
-				isEqual &= Mathf.IsEqualApprox(Gripper, manipObj.Gripper, 0.005f);
+				isEqual &= Mathf.IsEqualApprox(Axis6, manipObj.Axis6, 0.005f);
+				isEqual &= Gripper == manipObj.Gripper;
 				return isEqual;
 			}
 
 			public override int GetHashCode()
 			{
-				return HashCode.Combine(Axis1, Axis2, Axis3, Axis4, Axis5, Gripper);
+				return HashCode.Combine(Axis1, Axis2, Axis3, Axis4, Axis5, Axis6, Gripper);
 			}
 		}
 
