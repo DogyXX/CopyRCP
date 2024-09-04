@@ -212,6 +212,14 @@ namespace RoverControlApp.MVVM.Model
 			StopAll();
 		}
 
+
+		//to be used after 15 seconds of inactivity
+		public void SetControlModeToEStop()
+		{
+			ControlMode = ControlMode.EStop;
+			StopAll();
+		}
+
 		private void StopAll()
 		{
 			EventLogger.LogMessage("PressedKeys", EventLogger.LogLevel.Info, "Stopping all movement");
