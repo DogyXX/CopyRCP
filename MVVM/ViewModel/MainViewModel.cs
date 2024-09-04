@@ -164,17 +164,30 @@ namespace RoverControlApp.MVVM.ViewModel
 
 		void OnSettingsPropertyChanged(StringName category, StringName name, Variant oldValue, Variant newValue)
 		{
-			if (category != nameof(LocalSettings.Camera)) return;
-
-			switch (name)
+			switch (category)
 			{
-				case nameof(LocalSettings.Camera.EnablePtzControl):
-					ManagePtzStatus();
+				case nameof(LocalSettings.Camera):
+					switch (name)
+					{
+						case nameof(LocalSettings.Camera.EnablePtzControl):
+							ManagePtzStatus();
+							break;
+						case nameof(LocalSettings.Camera.EnableRtspStream):
+							ManageRtspStatus();
+							break;
+					}
 					break;
-				case nameof(LocalSettings.Camera.EnableRtspStream):
-					ManageRtspStatus();
+				case nameof(LocalSettings.General):
+					switch (name)
+					{
+						case nameof(LocalSettings.General.AllowedAfkTime):
+							AfkTimer.WaitTime = LocalSettings.Singleton.General.AllowedAfkTime;
+							AfkTimer.Start();
+							break;
+					}
 					break;
 			}
+			
 		}
 
 		/*
@@ -352,7 +365,7 @@ namespace RoverControlApp.MVVM.ViewModel
 
 		public void AfkTimerSetup()
 		{
-			AfkTimer.WaitTime = 10;
+			AfkTimer.WaitTime = LocalSettings.Singleton.General.AllowedAfkTime;
 			AfkTimer.OneShot = true;
 			AfkTimer.Autostart = true;
 			AfkTimer.Timeout += PressedKeys.SetControlModeToEStop;

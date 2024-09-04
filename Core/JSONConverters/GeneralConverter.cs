@@ -18,6 +18,7 @@ public class GeneralConverter : JsonConverter<General>
 		string? missionControlPosition = null;
 		string? missionControlSize = null;
 		long? backCaptureLength = null;
+		int? allowedAfkTime = null;
 
 		while (reader.Read())
 		{
@@ -44,6 +45,9 @@ public class GeneralConverter : JsonConverter<General>
 				case nameof(General.BackCaptureLength):
 					backCaptureLength = reader.GetInt64();
 					break;
+				case nameof(General.AllowedAfkTime):
+					allowedAfkTime = reader.GetInt32();
+					break;
 				default:
 					reader.Skip();
 					break;
@@ -55,7 +59,8 @@ public class GeneralConverter : JsonConverter<General>
 			verboseDebug ?? Default.VerboseDebug,
 			missionControlPosition ?? Default.MissionControlPosition,
 			missionControlSize ?? Default.MissionControlSize,
-			backCaptureLength ?? Default.BackCaptureLength
+			backCaptureLength ?? Default.BackCaptureLength,
+			allowedAfkTime ?? Default.AllowedAfkTime
 		);
 	}
 
@@ -66,6 +71,7 @@ public class GeneralConverter : JsonConverter<General>
 		writer.WriteString(nameof(General.MissionControlPosition), value.MissionControlPosition);
 		writer.WriteString(nameof(General.MissionControlSize), value.MissionControlSize);
 		writer.WriteNumber(nameof(General.BackCaptureLength), value.BackCaptureLength);
+		writer.WriteNumber(nameof(General.AllowedAfkTime), value.AllowedAfkTime);
 		writer.WriteEndObject();
 	}
 }

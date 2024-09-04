@@ -15,14 +15,16 @@ public partial class General : SettingBase, ICloneable
 		_missionControlPosition = "20;30";
 		_missionControlSize = "480;360";
 		_backCaptureLength = 15000;
+		_allowedAfkTime = 30;
 	}
 
-	public General(bool verboseDebug, string missionControlPosition, string missionControlSize, long backCaptureLength)
+	public General(bool verboseDebug, string missionControlPosition, string missionControlSize, long backCaptureLength, int allowedAfkTime)
 	{
 		_verboseDebug = verboseDebug;
 		_missionControlPosition = missionControlPosition;
 		_missionControlSize = missionControlSize;
 		_backCaptureLength = backCaptureLength;
+		_allowedAfkTime = allowedAfkTime;
 	}
 
 	public object Clone()
@@ -33,6 +35,7 @@ public partial class General : SettingBase, ICloneable
 			MissionControlPosition = _missionControlPosition,
 			MissionControlSize = _missionControlSize,
 			BackCaptureLength = _backCaptureLength,
+			AllowedAfkTime = _allowedAfkTime
 		};
 	}
 
@@ -63,10 +66,17 @@ public partial class General : SettingBase, ICloneable
 		get => _backCaptureLength;
 		set => EmitSignal_SettingChanged(ref _backCaptureLength, value);
 	}
-
+	
+	[SettingsManagerVisible(cellMode: TreeItem.TreeCellMode.Range, formatData: "0;180;1;f;i", customTooltip: "How long [secs] before you are moved to EStop")]
+	public int AllowedAfkTime
+	{
+		get => _allowedAfkTime;
+		set => EmitSignal_SettingChanged(ref _allowedAfkTime, value);
+	}
 
 	bool _verboseDebug;
 	string _missionControlPosition;
 	string _missionControlSize;
 	long _backCaptureLength;
+	int _allowedAfkTime;
 }
