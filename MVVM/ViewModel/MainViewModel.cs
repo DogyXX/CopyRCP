@@ -26,6 +26,7 @@ namespace RoverControlApp.MVVM.ViewModel
 
 		private ImageTexture? _imTexture;
 
+
 		[Export]
 		private TextureRect imTextureRect = null!;
 		[Export]
@@ -50,6 +51,8 @@ namespace RoverControlApp.MVVM.ViewModel
 
 		[Export]
 		private ZedMonitor ZedMonitor = null!;
+
+		private Timer AfkTimer = new();
 		public MainViewModel()
 		{
 			PressedKeys = new PressedKeys();
@@ -81,6 +84,9 @@ namespace RoverControlApp.MVVM.ViewModel
 			ManagePtzStatus();
 			ManageRtspStatus();
 
+			AddChild(AfkTimer);
+			AfkTimerSetup();
+
 			LocalSettings.Singleton.Connect(LocalSettings.SignalName.CategoryChanged, Callable.From<StringName>(OnSettingsCategoryChanged));
 			LocalSettings.Singleton.Connect(LocalSettings.SignalName.PropagatedPropertyChanged, Callable.From<StringName, StringName, Variant, Variant>(OnSettingsPropertyChanged));
 		}
@@ -111,6 +117,7 @@ namespace RoverControlApp.MVVM.ViewModel
 		{
 			if (@event is not (InputEventKey or InputEventJoypadButton or InputEventJoypadMotion)) return;
 			PressedKeys?.HandleInputEvent(@event);
+			ResetTimer();
 
 			if (@event.IsActionPressed("app_backcapture_save"))
 			{
@@ -144,6 +151,8 @@ namespace RoverControlApp.MVVM.ViewModel
 		/*
 		 * Settings event handlers
 		 */
+
+
 
 		void OnSettingsCategoryChanged(StringName property)
 		{
@@ -341,6 +350,19 @@ namespace RoverControlApp.MVVM.ViewModel
 			return true;
 		}
 
+		public void AfkTimerSetup()
+		{
+			AfkTimer.WaitTime = 10;
+			AfkTimer.OneShot = true;
+			AfkTimer.Autostart = true;
+			AfkTimer.Timeout += PressedKeys.SetControlModeToEStop;
+			AfkTimer.Start();
+		}
+
+		public void ResetTimer()
+		{
+			AfkTimer.Start();
+		}
 
 		private void OnBackCapture()
 		{
