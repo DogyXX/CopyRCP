@@ -7,7 +7,7 @@ namespace RoverControlApp.Core.JSONConverters;
 
 public class CameraConverter : JsonConverter<Camera>
 {
-	private static readonly Camera Default = new();
+	private static readonly Camera Default = new(0);
 
 	public override Camera Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
 	{
@@ -19,6 +19,7 @@ public class CameraConverter : JsonConverter<Camera>
 		bool? enableRtspStream = null;
 		bool? enablePtzControl = null;
 		double? ptzRequestFrequency = null;
+		bool? dontRefresh = null;
 
 		while (reader.Read())
 		{
@@ -48,6 +49,9 @@ public class CameraConverter : JsonConverter<Camera>
 				case nameof(Camera.PtzRequestFrequency):
 					ptzRequestFrequency = reader.GetDouble();
 					break;
+				case nameof(Camera.DontRefresh):
+					dontRefresh = reader.GetBoolean();
+					break;
 				default:
 					reader.Skip();
 					break;
@@ -60,7 +64,8 @@ public class CameraConverter : JsonConverter<Camera>
 			inverseAxis ?? Default.InverseAxis,
 			enableRtspStream ?? Default.EnableRtspStream,
 			enablePtzControl ?? Default.EnablePtzControl,
-			ptzRequestFrequency ?? Default.PtzRequestFrequency
+			ptzRequestFrequency ?? Default.PtzRequestFrequency,
+			dontRefresh ?? Default.DontRefresh
 		);
 	}
 
@@ -73,6 +78,7 @@ public class CameraConverter : JsonConverter<Camera>
 		writer.WriteBoolean(nameof(Camera.EnableRtspStream), value.EnableRtspStream);
 		writer.WriteBoolean(nameof(Camera.EnablePtzControl), value.EnablePtzControl);
 		writer.WriteNumber(nameof(Camera.PtzRequestFrequency), value.PtzRequestFrequency);
+		writer.WriteBoolean(nameof(Camera.DontRefresh), value.DontRefresh);
 		writer.WriteEndObject();
 	}
 }

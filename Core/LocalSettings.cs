@@ -4,6 +4,8 @@ using System;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using RoverControlApp.Core.Settings;
+
 namespace RoverControlApp.Core;
 
 /// <summary>
@@ -13,7 +15,7 @@ public partial class LocalSettings : Node
 {
 	private sealed class PackedSettings
 	{
-		public Settings.Camera? Camera { get; set; } = null;
+		public Settings.AllCameras? AllCameras { get; set; } = null;
 		public Settings.Mqtt? Mqtt { get; set; } = null;
 		public Settings.Joystick? Joystick { get; set; } = null;
 		public Settings.SpeedLimiter? SpeedLimiter { get; set; } = null;
@@ -48,7 +50,7 @@ public partial class LocalSettings : Node
 
 	public LocalSettings()
 	{
-		_camera = new();
+		_allCameras = new ();
 		_mqtt = new();
 		_joystick = new();
 		_speedLimiter = new();
@@ -82,7 +84,7 @@ public partial class LocalSettings : Node
 
 			var packedSettings = JsonSerializer.Deserialize<PackedSettings>(serializedSettings, serializerOptions) ?? throw new DataException("unknown reason");
 
-			Camera = packedSettings.Camera ?? new();
+			AllCameras = packedSettings.AllCameras ?? new();
 			Mqtt = packedSettings.Mqtt ?? new();
 			Joystick = packedSettings.Joystick ?? new();
 			SpeedLimiter = packedSettings.SpeedLimiter ?? new();
@@ -112,7 +114,7 @@ public partial class LocalSettings : Node
 			
 			PackedSettings packedSettings = new()
 			{
-				Camera = Camera,
+				AllCameras = AllCameras,
 				Mqtt = Mqtt,
 				Joystick = Joystick,
 				SpeedLimiter = SpeedLimiter,
@@ -137,7 +139,7 @@ public partial class LocalSettings : Node
 	public void ForceDefaultSettings()
 	{
 		EventLogger.LogMessage("LocalSettings", EventLogger.LogLevel.Info, "Loading default settings");
-		Camera = new();
+		AllCameras = new();
 		Mqtt = new();
 		Joystick = new();
 		SpeedLimiter = new();
@@ -174,24 +176,24 @@ public partial class LocalSettings : Node
 	}
 
 
-	[SettingsManagerVisible(customName: "Camera Settings")]
-	public Settings.Camera Camera
+	[SettingsManagerVisible(customName: "All Cameras Settings")]
+	public Settings.AllCameras AllCameras
 	{
-		get => _camera;
+		get => _allCameras;
 		set
 		{
-			_camera = value;
+			_allCameras = value;
 
-			_camera.Connect(
+			_allCameras.Connect(
 				Settings.Camera.SignalName.SubcategoryChanged,
 				Callable.From(CreatePropagator(SignalName.PropagatedSubcategoryChanged)) 
 			);
-			_camera.Connect(
+			_allCameras.Connect(
 				Settings.Camera.SignalName.PropertyChanged,
 				Callable.From(CreatePropagator(SignalName.PropagatedPropertyChanged))
 			);
 
-			EmitSignalCategoryChanged(nameof(Camera));
+			EmitSignalCategoryChanged(nameof(AllCameras));
 		}
 	}
 
@@ -279,7 +281,7 @@ public partial class LocalSettings : Node
 		}
 	}
 
-	Settings.Camera _camera;
+	Settings.AllCameras _allCameras;
 	Settings.Mqtt _mqtt;
 	Settings.Joystick _joystick;
 	Settings.SpeedLimiter _speedLimiter;
